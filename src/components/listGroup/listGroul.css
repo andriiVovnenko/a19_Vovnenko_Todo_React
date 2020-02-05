@@ -1,0 +1,41 @@
+h1 {
+    color: red;
+}
+
+ul {
+    list-style-type: none;
+}
+
+li {
+    font-size: 18px;
+    transition: .2s linear;
+}
+
+li:hover {
+    background-color: #61dafb;
+}
+
+.taskDone  {
+    text-decoration: line-through red;
+    background-color: lightgrey;
+}
+
+input {
+    height: 100%;
+}
+
+.wrap_input {
+    margin-bottom: 10%;
+}
+
+.dis {
+    display: none!important;
+}
+
+.deleteAllBtn {
+    margin-top: 5%;
+}
+
+.items {
+    transform:rotate(-2deg);
+}
