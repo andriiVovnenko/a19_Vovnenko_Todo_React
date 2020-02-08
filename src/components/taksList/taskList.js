@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+// todo remove to taskList/index.js
 import './tasklist.css'
 import ToDoInput from "./../input";
 import ListGroup from "../listGroup";
@@ -22,11 +23,16 @@ const TaskList = () => {
         setTasks(newList.sortDone());
     };
 
+    // bad practice
+    // todo endure sortDone from component to helpers add where need
     Array.prototype.sortDone = function () {
         return this.sort((prevEl, curEl) => prevEl.done - curEl.done);
     };
 
     const checkTask = (id) => {
+        // you need to states
+        // one for order
+        // another for tasks may discuss
         let newList = [];
         for (let i = 0; i < tasks.length; i++){
             if(tasks[i].id === id){
@@ -45,6 +51,9 @@ const TaskList = () => {
 
     const filter = (filteredString) => {
         const newList = tasks.map(task => {
+            // you can do like this:
+            // const show = task.task.toLowerCase().startsWith(filteredString.toString().toLowerCase())
+            // return ({...task, show});
             if(task.task.toLowerCase().startsWith(filteredString.toString().toLowerCase())){
                 return ({...task, show:true});
             } else {

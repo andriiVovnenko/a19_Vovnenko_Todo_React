@@ -1,4 +1,5 @@
 import React from "react";
+// todo remove to weeks/index.js
 import "./weeks.css"
 const Weeks = ({changeDay, dayToShow}) => {
 
