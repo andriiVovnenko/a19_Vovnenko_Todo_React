@@ -4,70 +4,67 @@ import './tasklist.css'
 import ToDoInput from "./../input";
 import ListGroup from "../listGroup";
 import Weeks from "../weeks";
+import sortDone from '../../helpers/sortDone';
+
+const initTasks = {
+    1: {task:'Drink', done: false, show: true, day: 1, id:1},
+    2: {task:'Eat', done: false, show: true, day: 2, id:2},
+    3: {task:'Coffee', done: true, show: true, day: 3, id:3},
+    4: {task:'Coffee3', done: true, show: true, day: 4, id:4},
+    5: {task:'Coffee2', done: true, show: true, day: 5, id:6} ,
+    6:{task:'Coffee1', done: true, show: true, day: 6, id:7},
+    7: {task:'CoffeeSun', done: true, show: true, day: 0, id:8},
+
+}
 
 const TaskList = () => {
 
-    const [tasks, setTasks] = useState([{task:'Drink', done: false, show: true, day: 1, id:1}, {task:'Eat', done: false, show: true, day: 2, id:2}, {task:'Coffee', done: true, show: true, day: 3, id:3}, {task:'Coffee3', done: true, show: true, day: 4, id:4}, {task:'Coffee2', done: true, show: true, day: 5, id:6} , {task:'Coffee1', done: true, show: true, day: 6, id:7},{task:'CoffeeSun', done: true, show: true, day: 0, id:8}]);
+    const [tasks, setTasks] = useState(initTasks);
     const [dayToShow, setDayToShow] = useState(new Date().getDay()-1);
-    const [id, setId] = useState(100);
 
     const changeDay = (day) => {
         setDayToShow(day);
     };
 
     const addTask = (task) => {
-        const newList = [...tasks.map(({task, done, day,id}) =>
-            ({task, done, day, show:true, id})),
-            {task, done: false, show: true, day: dayToShow, id}];
-        setId(id+1);
-        setTasks(newList.sortDone());
-    };
-
-    // bad practice
-    // todo endure sortDone from component to helpers add where need
-    Array.prototype.sortDone = function () {
-        return this.sort((prevEl, curEl) => prevEl.done - curEl.done);
+        const id = Object.keys(tasks).length + 1;
+        const newTasks = { ...tasks, [id]: { task, done: false, show: true, day: dayToShow, id}};
+        setTasks(newTasks);
     };
 
     const checkTask = (id) => {
-        // you need to states
-        // one for order
-        // another for tasks may discuss
-        let newList = [];
-        for (let i = 0; i < tasks.length; i++){
-            if(tasks[i].id === id){
-                tasks[i].done = !tasks[i].done;
-            }
-            newList.push(tasks[i]);
-        }
-        setTasks(newList.sortDone());
+        const newTasks = {
+            ...tasks, [id]: { ...tasks[id], done: !tasks[id].done }
+        };
+        setTasks(newTasks);
     };
 
     const deleteTask = (e) => {
-        const newList = tasks.filter(el => el.id!==parseInt(e.target.value));
-        e.stopPropagation();
-        setTasks(newList);
+        console.log(e.target.value)
+        const newTasks = { ...tasks };
+        delete newTasks[e.target.value];
+        setTasks(newTasks);
     };
 
     const filter = (filteredString) => {
-        const newList = tasks.map(task => {
-            // you can do like this:
-            // const show = task.task.toLowerCase().startsWith(filteredString.toString().toLowerCase())
-            // return ({...task, show});
-            if(task.task.toLowerCase().startsWith(filteredString.toString().toLowerCase())){
-                return ({...task, show:true});
-            } else {
-                return ({...task, show:false});
-            }
+        const newTasksList = Object.values(tasks).map(task => {
+            const show = task.toLowerCase().startsWith(filteredString.toString().toLowerCase());
+            return { ...task, show }
         });
-        setTasks(newList);
+        const newTasks = {};
+        newTasksList.forEach(task => {
+            newTasks[task.id] = { ...task };
+        });
+        setTasks(newTasks);
     };
 
     const deleteChecked = (day) => {
-        const newList = tasks.filter(el => {
-            return !(el.day === day && el.done === true);
+        const newTasks = { ...tasks };
+        Object.values(newTasks).forEach(task => {
+            if (task.day !== day || task.done !== true) return;
+            delete newTasks[task.id];
         });
-        setTasks(newList);
+        setTasks(newTasks);
     };
 
     return (
@@ -83,7 +80,7 @@ const TaskList = () => {
                     <button type="button" className="btn btn-outline-danger deleteAllBtn" onClick={() => deleteChecked(dayToShow)}>delete all checked</button>
                 </div>
                 <div className="col-12 col-md-8">
-                    <ListGroup tasks={tasks} checkTask={checkTask} deleteTask={deleteTask} dayToShow={dayToShow} deleteChecked={deleteChecked}/>
+                    <ListGroup tasks={Object.values(tasks).sort(sortDone)} checkTask={checkTask} deleteTask={deleteTask} dayToShow={dayToShow} deleteChecked={deleteChecked}/>
                 </div>
             </div>
         </div>
