@@ -1,9 +1,6 @@
-// todo remove useEffect
-import React, {useEffect} from "react";
-// todo remove to listGroup/index.js
-import './listGroul.css';
-// todo remove deleteChecked
-const ListGroup = ({tasks, checkTask, deleteTask, dayToShow, deleteChecked}) => {
+import React from "react";
+
+const ListGroup = ({tasks, checkTask, deleteTask, dayToShow}) => {
 
     let tasksToShow = tasks.filter(task => task.day === dayToShow);
 
