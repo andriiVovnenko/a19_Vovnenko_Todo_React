@@ -3,6 +3,8 @@ import ToDoInput from "./../input";
 import ListGroup from "../listGroup";
 import Weeks from "../weeks";
 import sortDone from '../../helpers/sortDone';
+import { connect } from 'react-redux';
+import { TOGGLE } from '../../actionTypes';
 
 const initTasks = {
     1: {task:'Drink', done: false, show: true, day: 1, id:1},
@@ -15,7 +17,7 @@ const initTasks = {
 
 }
 
-const TaskList = () => {
+const TaskList = ({ reduxTasks, dispatch }) => {
 
     const [tasks, setTasks] = useState(initTasks);
     const [dayToShow, setDayToShow] = useState(new Date().getDay()-1);
@@ -34,10 +36,7 @@ const TaskList = () => {
     };
 
     const checkTask = (id) => {
-        const newTasks = {
-            ...tasks, [id]: { ...tasks[id], done: !tasks[id].done }
-        };
-        setTasks(newTasks);
+        dispatch({ type: TOGGLE, payload: id });
     };
 
     const deleteTask = (e) => {
@@ -81,11 +80,18 @@ const TaskList = () => {
                     <button type="button" className="btn btn-outline-danger deleteAllBtn" onClick={() => deleteChecked(dayToShow)}>delete all checked</button>
                 </div>
                 <div className="col-12 col-md-8">
-                    <ListGroup tasks={Object.values(tasks).sort(sortDone)} checkTask={checkTask} deleteTask={deleteTask} dayToShow={dayToShow} deleteChecked={deleteChecked}/>
+                    <ListGroup tasks={Object.values(reduxTasks).sort(sortDone)} checkTask={checkTask} deleteTask={deleteTask} dayToShow={dayToShow} deleteChecked={deleteChecked}/>
                 </div>
             </div>
         </div>
     )
 };
 
-export default TaskList;
+const mapStateToProps = (state => {
+    return {
+        reduxTasks: state.items
+    }
+})
+
+
+export default connect(mapStateToProps)(TaskList);
