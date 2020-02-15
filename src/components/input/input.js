@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 
 
-const ToDoInput = ({ addTask, filter }) => {
+const ToDoInput = ({ addTask, setFilteredString }) => {
 
     const [task, setTask] = useState('');
 
     const onChange = (e) => {
         setTask(e.target.value);
-        filter(e.target.value);
+        setFilteredString(e.target.value);
     };
 
     return (
