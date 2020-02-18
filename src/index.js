@@ -6,9 +6,11 @@ import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import items from './reducers/itemsReducer'
+import vissibleReducer from "./reducers/vissibleReducer";
 
 const store = createStore(combineReducers({
-  items: items,
+    items: items,
+    filter: vissibleReducer,
 }));
 
 ReactDOM.render(

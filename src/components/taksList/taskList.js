@@ -2,12 +2,13 @@ import React, {useState} from "react";
 import ToDoInput from "./../input";
 import ListGroup from "../listGroup";
 import Weeks from "../weeks";
-import { selectSortedTasks, selectFilteredSortedTasks } from '../../selectors/tasks';
+import { selectSortedTasks, selectFilteredSortedTasks, selectByFilter } from '../../selectors/tasks';
 import { connect } from 'react-redux';
-import { TOGGLE, ADD_TASK, DELETE_TASK, DELETE_ALL_CHECKED, FILTER_TASK } from '../../actionTypes';
+import { TOGGLE, ADD_TASK, DELETE_TASK, DELETE_ALL_CHECKED } from '../../actionTypes';
+import FilterButtons from "../filterButtons";
 
 
-const TaskList = ({ reduxTasks, dispatch }) => {
+const TaskList = ({ reduxTasks, dispatch, filter }) => {
     const [dayToShow, setDayToShow] = useState(new Date().getDay() - 1);
     const [id, setId] = useState(100);
     const [fileredStding, setFilteredString] = useState('');
@@ -43,23 +44,27 @@ const TaskList = ({ reduxTasks, dispatch }) => {
                 </div>
             </div>
             <div className="row">
+                <div className="col-12 col-md-4">
+                    < FilterButtons />
+                </div>
+            </div>
+            <div className="row">
                 <div className="col-12 col-md-4 weeks">
                     <Weeks changeDay={changeDay} dayToShow={dayToShow} />
                     <button type="button" className="btn btn-outline-danger deleteAllBtn" onClick={() => deleteChecked(dayToShow)}>delete all checked</button>
                 </div>
                 <div className="col-12 col-md-8">
-                    <ListGroup tasks={selectFilteredSortedTasks(reduxTasks, fileredStding)} checkTask={checkTask} deleteTask={deleteTask} dayToShow={dayToShow} deleteChecked={deleteChecked}/>
+                    <ListGroup tasks={selectFilteredSortedTasks(selectByFilter(reduxTasks, filter), fileredStding)} checkTask={checkTask} deleteTask={deleteTask} dayToShow={dayToShow} deleteChecked={deleteChecked}/>
                 </div>
             </div>
         </div>
     )
 };
-
 const mapStateToProps = (state => {
     return {
-        reduxTasks: selectSortedTasks(state),
+        reduxTasks: selectSortedTasks({items: state.items}),
+        filter: state.filter,
     }
 });
-
 
 export default connect(mapStateToProps)(TaskList);
