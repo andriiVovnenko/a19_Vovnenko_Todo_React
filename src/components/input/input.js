@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
+import {connect} from "react-redux";
+import {CHANGE_STRING} from "../../constants/filterConstants";
 
-
-const ToDoInput = ({ addTask, setFilteredString }) => {
-
-    const [task, setTask] = useState('');
+const ToDoInput = ({ addTask, filteredString, dispatch }) => {
 
     const onChange = (e) => {
-        setTask(e.target.value);
-        setFilteredString(e.target.value);
+        dispatch({ type: CHANGE_STRING, payload: e.target.value })
     };
 
     return (
@@ -22,7 +20,7 @@ const ToDoInput = ({ addTask, setFilteredString }) => {
                        className="form-control"
                        aria-label="Sizing example input"
                        aria-describedby="inputGroup-sizing-lg"
-                       value={task}
+                       value={filteredString}
                        onChange={onChange}/>
                 <div className="input-group-append">
                     <button
@@ -30,9 +28,8 @@ const ToDoInput = ({ addTask, setFilteredString }) => {
                         type="button"
                         id="button-addon2"
                         onClick={() => {
-                            if(task === '') return;
-                            addTask(task);
-                            setTask('');
+                            if(filteredString === '') return;
+                            addTask(filteredString);
                         }}>Add task</button>
                 </div>
             </div>
@@ -40,4 +37,10 @@ const ToDoInput = ({ addTask, setFilteredString }) => {
     );
 };
 
-export default ToDoInput;
+const mapStateToProps = (state) => {
+  return {
+      filteredString: state.filteredString
+  }
+};
+
+export default connect(mapStateToProps)(ToDoInput);

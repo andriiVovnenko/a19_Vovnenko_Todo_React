@@ -1,13 +1,11 @@
 import React from "react";
 
-const ListGroup = ({tasks, checkTask, deleteTask, dayToShow}) => {
-
-    let tasksToShow = tasks.filter(task => task.day === dayToShow);
+const ListGroup = ({tasks, checkTask, deleteTask}) => {
 
     return (
         <div>
         <ul className="list-group">
-            {tasksToShow
+            {tasks
                 .map(({task, done, show, id}) =>
                     <li
                         key={id}

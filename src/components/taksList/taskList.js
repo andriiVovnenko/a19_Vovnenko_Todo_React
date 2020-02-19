@@ -2,45 +2,41 @@ import React, {useState} from "react";
 import ToDoInput from "./../input";
 import ListGroup from "../listGroup";
 import Weeks from "../weeks";
-import { selectSortedTasks, selectFilteredSortedTasks, selectByFilter } from '../../selectors/tasks';
+import {selectFilteredSortedTasks, selectByDay, selectDay} from '../../selectors/tasks';
 import { connect } from 'react-redux';
 import { TOGGLE, ADD_TASK, DELETE_TASK, DELETE_ALL_CHECKED } from '../../actionTypes';
 import FilterButtons from "../filterButtons";
+import {CHANGE_DAY, CHANGE_STRING} from "../../constants/filterConstants";
 
-
-const TaskList = ({ reduxTasks, dispatch, filter }) => {
-    const [dayToShow, setDayToShow] = useState(new Date().getDay() - 1);
+const TaskList = ({
+                      reduxTasks,
+                      day,
+                      checkTask,
+                      deleteChecked,
+                      deleteTaskAction,
+                      addTaskToStore,
+                      changeString,
+                      changeDay
+    }) => {
     const [id, setId] = useState(100);
-    const [fileredStding, setFilteredString] = useState('');
-
-    const changeDay = (day) => {
-        setDayToShow(day);
-    };
 
     const addTask = (task) => {
-        setFilteredString('')
         setId(id+1);
-        dispatch({type: ADD_TASK, payload: {task, dayToShow, id}});
-    };
-
-    const checkTask = (id) => {
-        dispatch({ type: TOGGLE, payload: id });
+        changeString();
+        addTaskToStore({task, day, id});
     };
 
     const deleteTask = (e) => {
         e.stopPropagation();
-       dispatch({ type: DELETE_TASK, payload: e.target.value });
+        deleteTaskAction(e);
     };
 
-    const deleteChecked = (day) => {
-        dispatch({type: DELETE_ALL_CHECKED, payload : day });
-    };
 
     return (
         <div>
             <div className="row">
                 <div className="col-12">
-                    <ToDoInput addTask={addTask} setFilteredString={setFilteredString} />
+                    <ToDoInput addTask={addTask} />
                 </div>
             </div>
             <div className="row">
@@ -50,11 +46,24 @@ const TaskList = ({ reduxTasks, dispatch, filter }) => {
             </div>
             <div className="row">
                 <div className="col-12 col-md-4 weeks">
-                    <Weeks changeDay={changeDay} dayToShow={dayToShow} />
-                    <button type="button" className="btn btn-outline-danger deleteAllBtn" onClick={() => deleteChecked(dayToShow)}>delete all checked</button>
+                    <Weeks
+                        changeDay={changeDay}
+                        dayToShow={day}
+                    />
+                    <button
+                        type="button"
+                        className="btn btn-outline-danger deleteAllBtn"
+                        onClick={() => deleteChecked(day)}>
+                        delete all checked
+                    </button>
                 </div>
                 <div className="col-12 col-md-8">
-                    <ListGroup tasks={selectFilteredSortedTasks(selectByFilter(reduxTasks, filter), fileredStding)} checkTask={checkTask} deleteTask={deleteTask} dayToShow={dayToShow} deleteChecked={deleteChecked}/>
+                    <ListGroup
+                        tasks={reduxTasks}
+                        checkTask={checkTask}
+                        deleteTask={deleteTask}
+                        deleteChecked={deleteChecked}
+                    />
                 </div>
             </div>
         </div>
@@ -62,9 +71,23 @@ const TaskList = ({ reduxTasks, dispatch, filter }) => {
 };
 const mapStateToProps = (state => {
     return {
-        reduxTasks: selectSortedTasks({items: state.items}),
-        filter: state.filter,
+        reduxTasks: selectFilteredSortedTasks({
+            tasks: selectByDay(state),
+            state
+        }),
+        day: selectDay(state),
     }
 });
 
-export default connect(mapStateToProps)(TaskList);
+const mapDispatchToProps = (dispatch => {
+   return {
+       checkTask: (id) => dispatch({ type: TOGGLE, payload: id }),
+       changeDay: (day) => dispatch({type: CHANGE_DAY, payload: day}),
+       changeString: () => dispatch({type: CHANGE_STRING, payload: ''}),
+       addTaskToStore: ({task, day, id}) => dispatch({type: ADD_TASK, payload: {task, day, id}}),
+       deleteTaskAction: (e) => dispatch({ type: DELETE_TASK, payload: e.target.value }),
+       deleteChecked: (day) => dispatch({type: DELETE_ALL_CHECKED, payload : day }),
+   }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(TaskList);

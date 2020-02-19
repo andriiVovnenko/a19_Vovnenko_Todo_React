@@ -7,10 +7,14 @@ import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import items from './reducers/itemsReducer'
 import vissibleReducer from "./reducers/vissibleReducer";
+import filteredStingReducer from "./reducers/filteredStingReducer";
+import dayReducer from "./reducers/dayReducer";
 
 const store = createStore(combineReducers({
     items: items,
     filter: vissibleReducer,
+    filteredString: filteredStingReducer,
+    day: dayReducer,
 }));
 
 ReactDOM.render(

@@ -19,7 +19,7 @@ const initState = {
   17: {task:'CoffeeSun', done: true, show: true, day: 6, id:17},
 };
 
-  export default (state = {...initState}, action) => {
+  export default (state = initState, action) => {
     switch (action.type) {
       case TOGGLE: {
         const {payload} = action;
@@ -30,12 +30,12 @@ const initState = {
       }
 
       case ADD_TASK: {
-        const {task, dayToShow, id} = action.payload;
+        const {task, day, id} = action.payload;
         const newTasks = {...state };
         Object.values(newTasks).forEach(item => item.show = true);
         return {
           ...newTasks,
-          [id]: {task, done: false, show: true, day: dayToShow, id}
+          [id]: {task, done: false, show: true, day, id}
         };
       }
 
