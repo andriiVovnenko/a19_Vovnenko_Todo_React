@@ -4,9 +4,14 @@ import ListGroup from "../listGroup";
 import Weeks from "../weeks";
 import {selectFilteredSortedTasks, selectByDay, selectDay} from '../../selectors/tasks';
 import { connect } from 'react-redux';
-import { TOGGLE, ADD_TASK, DELETE_TASK, DELETE_ALL_CHECKED } from '../../actionTypes';
 import FilterButtons from "../filterButtons";
-import {CHANGE_DAY, CHANGE_STRING} from "../../constants/filterConstants";
+import {
+    addTaskCreator, changeDayCreator,
+    deleteCheckedCreated,
+    deleteTaskCreator,
+    refreshStringCreator,
+    toogleTaskCreator
+} from "../../actionCreators/tasks";
 
 const TaskList = ({
                       reduxTasks,
@@ -16,7 +21,7 @@ const TaskList = ({
                       deleteTaskAction,
                       addTaskToStore,
                       changeString,
-                      changeDay
+                      changeDay,
     }) => {
     const [id, setId] = useState(100);
 
@@ -30,7 +35,6 @@ const TaskList = ({
         e.stopPropagation();
         deleteTaskAction(e);
     };
-
 
     return (
         <div>
@@ -81,12 +85,12 @@ const mapStateToProps = (state => {
 
 const mapDispatchToProps = (dispatch => {
    return {
-       checkTask: (id) => dispatch({ type: TOGGLE, payload: id }),
-       changeDay: (day) => dispatch({type: CHANGE_DAY, payload: day}),
-       changeString: () => dispatch({type: CHANGE_STRING, payload: ''}),
-       addTaskToStore: ({task, day, id}) => dispatch({type: ADD_TASK, payload: {task, day, id}}),
-       deleteTaskAction: (e) => dispatch({ type: DELETE_TASK, payload: e.target.value }),
-       deleteChecked: (day) => dispatch({type: DELETE_ALL_CHECKED, payload : day }),
+       checkTask: (id) => dispatch(toogleTaskCreator(id)),
+       changeDay: (day) => dispatch(changeDayCreator(day)),
+       changeString: () => dispatch(refreshStringCreator()),
+       addTaskToStore: ({task, day, id}) => dispatch(addTaskCreator({task, day, id})),
+       deleteTaskAction: (e) => dispatch(deleteTaskCreator(e)),
+       deleteChecked: (day) => dispatch(deleteCheckedCreated(day)),
    }
 });
 
