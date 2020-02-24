@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import {connect} from "react-redux";
 import {CHANGE_STRING} from "../../constants/filterConstants";
 

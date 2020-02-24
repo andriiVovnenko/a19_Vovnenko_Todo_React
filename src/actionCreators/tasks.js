@@ -10,3 +10,4 @@ export const changeDayCreator = (day) => ({type: CHANGE_DAY, payload: day});
 export const changeFilterShowAll = () => ({type: SHOW_ALL});
 export const changeFilterShowDone = () => ({type: SHOW_DONE});
 export const changeFilterShowActive = () => ({type: SHOW_ACTIVE});
+export const getTasks = () => ({type: 'getTasks'});

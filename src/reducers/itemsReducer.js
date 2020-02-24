@@ -19,8 +19,13 @@ const initState = {
   17: {task:'CoffeeSun', done: true, show: true, day: 6, id:17},
 };
 
-  export default (state = initState, action) => {
+  export default (state = {}, action) => {
     switch (action.type) {
+      case 'getTasks': {
+        return {
+          ...initState,
+        }
+      }
       case TOGGLE: {
         const {payload} = action;
         return {

@@ -1,40 +1,45 @@
-import React, {useState} from "react";
+import React, { useState, useEffect} from "react";
 import ToDoInput from "./../input";
 import ListGroup from "../listGroup";
 import Weeks from "../weeks";
+import * as actions from './../../actionCreators/tasks'
 import {selectFilteredSortedTasks, selectByDay, selectDay} from '../../selectors/tasks';
 import { connect } from 'react-redux';
 import FilterButtons from "../filterButtons";
-import {
-    addTaskCreator, changeDayCreator,
-    deleteCheckedCreated,
-    deleteTaskCreator,
-    refreshStringCreator,
-    toogleTaskCreator
-} from "../../actionCreators/tasks";
+
+import {bindActionCreators} from "redux";
 
 const TaskList = ({
                       reduxTasks,
                       day,
-                      checkTask,
-                      deleteChecked,
-                      deleteTaskAction,
-                      addTaskToStore,
-                      changeString,
-                      changeDay,
+                      toogleTaskCreator,
+                      deleteCheckedCreated,
+                      deleteTaskCreator,
+                      addTaskCreator,
+                      refreshStringCreator,
+                      changeDayCreator,
+                      getTasks,
     }) => {
     const [id, setId] = useState(100);
 
     const addTask = (task) => {
         setId(id+1);
-        changeString();
-        addTaskToStore({task, day, id});
+        refreshStringCreator();
+        addTaskCreator({task, day, id});
     };
 
     const deleteTask = (e) => {
         e.stopPropagation();
-        deleteTaskAction(e);
+        deleteTaskCreator(e);
     };
+
+    useEffect(() => {
+        console.log('start');
+        setTimeout(() => {
+            console.log('finish');
+            getTasks();
+        }, 2000);
+    }, []);
 
     return (
         <div>
@@ -51,22 +56,22 @@ const TaskList = ({
             <div className="row">
                 <div className="col-12 col-md-4 weeks">
                     <Weeks
-                        changeDay={changeDay}
+                        changeDay={changeDayCreator}
                         dayToShow={day}
                     />
                     <button
                         type="button"
                         className="btn btn-outline-danger deleteAllBtn"
-                        onClick={() => deleteChecked(day)}>
+                        onClick={() => deleteCheckedCreated(day)}>
                         delete all checked
                     </button>
                 </div>
                 <div className="col-12 col-md-8">
                     <ListGroup
                         tasks={reduxTasks}
-                        checkTask={checkTask}
+                        checkTask={toogleTaskCreator}
                         deleteTask={deleteTask}
-                        deleteChecked={deleteChecked}
+                        deleteChecked={deleteCheckedCreated}
                     />
                 </div>
             </div>
@@ -80,18 +85,12 @@ const mapStateToProps = (state => {
             state
         }),
         day: selectDay(state),
+
     }
 });
 
 const mapDispatchToProps = (dispatch => {
-   return {
-       checkTask: (id) => dispatch(toogleTaskCreator(id)),
-       changeDay: (day) => dispatch(changeDayCreator(day)),
-       changeString: () => dispatch(refreshStringCreator()),
-       addTaskToStore: ({task, day, id}) => dispatch(addTaskCreator({task, day, id})),
-       deleteTaskAction: (e) => dispatch(deleteTaskCreator(e)),
-       deleteChecked: (day) => dispatch(deleteCheckedCreated(day)),
-   }
+   return bindActionCreators(actions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TaskList);
