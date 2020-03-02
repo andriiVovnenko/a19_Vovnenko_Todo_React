@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState } from "react";
 import ToDoInput from "./../input";
 import ListGroup from "../listGroup";
 import Weeks from "../weeks";
@@ -6,8 +6,10 @@ import * as actions from './../../actionCreators/tasks'
 import {selectFilteredSortedTasks, selectByDay, selectDay} from '../../selectors/tasks';
 import { connect } from 'react-redux';
 import FilterButtons from "../filterButtons";
+import {Route, Switch} from 'react-router-dom';
 
 import {bindActionCreators} from "redux";
+import ChangeTask from "../changeTask/ChangeTask";
 
 const TaskList = ({
                       reduxTasks,
@@ -33,6 +35,7 @@ const TaskList = ({
         deleteTaskCreator(e);
     };
 
+/*
     useEffect(() => {
         console.log('start');
         setTimeout(() => {
@@ -40,6 +43,7 @@ const TaskList = ({
             getTasks();
         }, 2000);
     }, []);
+*/
 
     return (
         <div>
@@ -67,12 +71,15 @@ const TaskList = ({
                     </button>
                 </div>
                 <div className="col-12 col-md-8">
-                    <ListGroup
-                        tasks={reduxTasks}
-                        checkTask={toogleTaskCreator}
-                        deleteTask={deleteTask}
-                        deleteChecked={deleteCheckedCreated}
-                    />
+                    <Switch>
+                        <Route path="/" exact children={<ListGroup
+                            tasks={reduxTasks}
+                            checkTask={toogleTaskCreator}
+                            deleteTask={deleteTask}
+                            deleteChecked={deleteCheckedCreated}
+                        />} />
+                        <Route path="/change-task/:id"  component={ChangeTask} />
+                    </Switch>
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-import {ADD_TASK, DELETE_ALL_CHECKED, DELETE_TASK, TOGGLE} from '../actionTypes';
+import {ADD_TASK, DELETE_ALL_CHECKED, DELETE_TASK, TOGGLE, CHANGE_TASK} from '../actionTypes';
 import {CHANGE_DAY, CHANGE_STRING, SHOW_ACTIVE, SHOW_ALL, SHOW_DONE} from "../constants/filterConstants";
 
 export const addTaskCreator = ({task, day, id}) => ({type: ADD_TASK, payload: {task, day, id}});
@@ -11,3 +11,4 @@ export const changeFilterShowAll = () => ({type: SHOW_ALL});
 export const changeFilterShowDone = () => ({type: SHOW_DONE});
 export const changeFilterShowActive = () => ({type: SHOW_ACTIVE});
 export const getTasks = () => ({type: 'getTasks'});
+export const changeTask = ({id, textTask}) => ({type: CHANGE_TASK, payload: {id, textTask}});

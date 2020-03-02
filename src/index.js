@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
@@ -10,6 +11,7 @@ import items from './reducers/itemsReducer'
 import vissibleReducer from "./reducers/vissibleReducer";
 import filteredStingReducer from "./reducers/filteredStingReducer";
 import dayReducer from "./reducers/dayReducer";
+import ChangeTask from "./components/changeTask";
 
 const ping = (store) => next => action => {
      setTimeout(() => {
@@ -33,7 +35,11 @@ const store = createStore(combineReducers({
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+      <Router>
+          <App />
+{/*          <Route path="/" exact component={App} />
+          <Route path="/change-task/:id" component={ChangeTask} />*/}
+      </Router>
   </Provider>,
   document.getElementById('root')
 );

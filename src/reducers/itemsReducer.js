@@ -1,4 +1,4 @@
-import { TOGGLE, ADD_TASK, DELETE_ALL_CHECKED, DELETE_TASK } from '../actionTypes';
+import {TOGGLE, ADD_TASK, DELETE_ALL_CHECKED, DELETE_TASK, CHANGE_TASK} from '../actionTypes';
 
 const initState = {
   1: {task:'Drink', done: false, show: true, day: 0, id:1},
@@ -19,8 +19,15 @@ const initState = {
   17: {task:'CoffeeSun', done: true, show: true, day: 6, id:17},
 };
 
-  export default (state = {}, action) => {
+  export default (state = initState, action) => {
     switch (action.type) {
+      case CHANGE_TASK: {
+        const {id, textTask} = action.payload;
+        return {
+          ...state,
+          [id]: { ...state[id], task:textTask, done: !state[id].done }
+        }
+      }
       case 'getTasks': {
         return {
           ...initState,

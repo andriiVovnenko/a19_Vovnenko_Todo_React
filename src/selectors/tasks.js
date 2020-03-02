@@ -34,3 +34,7 @@ export const selectByFilter = ({tasks, filter}) => {
         return tasks.filter(task => task.done);
     }
 };
+
+export const selectCurrentTask = ({params}) => params.id;
+
+export const selectTaksText = ({ items }, id) => items[id].task;
