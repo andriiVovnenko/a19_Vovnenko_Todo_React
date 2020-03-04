@@ -1,16 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import thunkMiddleware from 'redux-thunk';
+import promiseMiddleware from 'redux-promise-middleware';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import thunk from "redux-thunk";
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import items from './reducers/itemsReducer'
 import vissibleReducer from "./reducers/vissibleReducer";
 import filteredStingReducer from "./reducers/filteredStingReducer";
 import dayReducer from "./reducers/dayReducer";
+import tasksLoad from "./reducers/tasksLoadReducer";
 import ChangeTask from "./components/changeTask";
 
 const ping = (store) => next => action => {
@@ -30,15 +32,17 @@ const store = createStore(combineReducers({
     filter: vissibleReducer,
     filteredString: filteredStingReducer,
     day: dayReducer,
+    tasksLoad,
 }),
-    applyMiddleware(thunk, ping2));
+    applyMiddleware(thunkMiddleware, promiseMiddleware, ping2));
 
 ReactDOM.render(
   <Provider store={store}>
       <Router>
-          <App />
-{/*          <Route path="/" exact component={App} />
-          <Route path="/change-task/:id" component={ChangeTask} />*/}
+         <Switch>
+           <Route path="/change-task/:id" component={ChangeTask} />
+           <Route path="/" exact component={App} />
+         </Switch>
       </Router>
   </Provider>,
   document.getElementById('root')

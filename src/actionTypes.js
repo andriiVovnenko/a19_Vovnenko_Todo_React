@@ -4,3 +4,6 @@ export const TOGGLE = 'TOGGLE';
 export const DELETE_TASK = 'DELETE_TASK';
 export const FILTER_TASK = 'FILTER_TASK';
 export const CHANGE_TASK = 'CHANGE_TASK';
+export const GET_TASKS = 'GET_TASKS';
+export const GET_TASKS_FULFILLED = 'GET_TASKS_FULFILLED';
+export const GET_TASKS_PENDINGD = 'GET_TASKS_PENDING';
