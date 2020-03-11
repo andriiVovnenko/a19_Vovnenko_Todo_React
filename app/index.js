@@ -1,6 +1,7 @@
 const Koa = require('koa');
 const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
+const cors = require('koa-cors');
 
 const app = new Koa();
 const router = new Router();
@@ -11,6 +12,7 @@ app.use(async (ctx, next) => {
 });
 
 app.use(bodyParser());
+app.use(cors());
 
 const tasks = {
   1: {task:'Drink', done: false, show: true, day: 0, id:1},
@@ -31,26 +33,38 @@ const tasks = {
   17: {task:'CoffeeSun', done: true, show: true, day: 6, id:17},
 };
 
+const delay = (ms) => new Promise((res, reject) => {
+  setTimeout(res, ms);
+});
 
 router.get('/tasks', async (ctx, next) => {
+  console.log('all tasks');
+  //await delay(500);
   ctx.body = tasks;
-  await next
+  //ctx.status = 404;
+  await next;
 });
 
-router.get('/task/:id', async (ctx, next) => {
-  const { id } = ctx.params;
-  ctx.body = tasks[id];
-  await next
+router.get('/task', async (ctx, next) => {
+  const { id } = ctx.request.query;
+  console.log('one-Tasks');
+  //await delay(500);
+  //ctx.status = 404;
+  if(tasks[id]) {
+    ctx.body = (tasks[id]);
+  }
+  await next;
 });
 
-router.post('/task/update/:id', async (ctx, next) => {
-  const { id } = ctx.params;
-  const { body } = ctx.request;
+router.post('/task/update', async (ctx, next) => {
+  console.log('update');
+  const { id, task } = ctx.request.body;
   tasks[id] = {
     ...tasks[id],
-    ...body,
+    task
   };
-  ctx.body = tasks[id];
+  //await delay(1000);
+  ctx.status = 200;
   await next
 });
 

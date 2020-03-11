@@ -20,6 +20,7 @@ const TaskList = ({
   changeDayCreator,
   getTasksActionCreator,
   load,
+    er,
 }) => {
     const [id, setId] = useState(100);
 
@@ -36,7 +37,7 @@ const TaskList = ({
 
     useEffect(() => {
       getTasksActionCreator();
-    }, []);
+    }, [getTasksActionCreator]);
 
     return (
         <div>
@@ -65,7 +66,7 @@ const TaskList = ({
                 </div>
               <div className="col-12 col-md-8">
                 {
-                  !load ? 'Грузим таски!!!!!!!!!!!!!!!' : (
+                  !load ? 'Грузим таски!!!!!!!!!!!!!!!' : !er ? (
                     <ListGroup
                       tasks={reduxTasks}
                       checkTask={toogleTaskCreator}
@@ -73,6 +74,7 @@ const TaskList = ({
                       deleteChecked={deleteCheckedCreated}
                     />
                   )
+                      : <h1>{er}</h1>
                 }
               </div>
             </div>
@@ -87,6 +89,7 @@ const mapStateToProps = (state => {
         }),
         day: selectDay(state),
         load: state.tasksLoad,
+        er: state.er,
     }
 });
 

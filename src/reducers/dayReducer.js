@@ -1,6 +1,8 @@
 import {CHANGE_DAY} from "../constants/filterConstants";
 
-export default (state = new Date().getDay() - 1, action) => {
+const initState = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+
+export default (state = initState, action) => {
     switch (action.type) {
         case CHANGE_DAY: {
             const {payload} = action;

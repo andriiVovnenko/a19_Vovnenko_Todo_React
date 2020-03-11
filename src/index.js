@@ -13,19 +13,11 @@ import vissibleReducer from "./reducers/vissibleReducer";
 import filteredStingReducer from "./reducers/filteredStingReducer";
 import dayReducer from "./reducers/dayReducer";
 import tasksLoad from "./reducers/tasksLoadReducer";
+import taskLoad from "./reducers/taskLoadReducer";
 import ChangeTask from "./components/changeTask";
-
-const ping = (store) => next => action => {
-     setTimeout(() => {
-        console.log('ping')
-    }, 1000);
-    return next(action)
-};
-
-const ping2 = store => next => action => {
-    console.log('ping2');
-    return next(action)
-};
+import changeTaskReducer from "./reducers/changeTaskReducer";
+import errorReducer from "./reducers/errorReducer";
+import taskUpdateReducer from "./reducers/taskUpdateReducer";
 
 const store = createStore(combineReducers({
     items: items,
@@ -33,8 +25,12 @@ const store = createStore(combineReducers({
     filteredString: filteredStingReducer,
     day: dayReducer,
     tasksLoad,
+    taskLoad,
+    changeTaskReducer,
+    taskUpdate: taskUpdateReducer,
+    er: errorReducer,
 }),
-    applyMiddleware(thunkMiddleware, promiseMiddleware, ping2));
+    applyMiddleware(thunkMiddleware, promiseMiddleware));
 
 ReactDOM.render(
   <Provider store={store}>
